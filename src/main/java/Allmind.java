@@ -18,10 +18,11 @@ public class Allmind {
         //echo part
         String message;
         Scanner in = new Scanner(System.in);
+        taskList tasks = new taskList();
+
         do {
             message = in.nextLine();
-            System.out.println(message);
-            System.out.println(" ");
+            tasks.runTask(message);
         } while(!message.equals("bye"));
 
         System.out.println("That concludes the briefing,good luck.");
