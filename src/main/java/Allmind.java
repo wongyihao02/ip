@@ -22,7 +22,9 @@ public class Allmind {
 
         do {
             message = in.nextLine();
-            tasks.runTask(message);
+            if (!message.equals("bye")) {
+                tasks.runTask(message);
+            }
         } while(!message.equals("bye"));
 
         System.out.println("That concludes the briefing,good luck.");
