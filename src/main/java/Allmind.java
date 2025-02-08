@@ -20,12 +20,15 @@ public class Allmind {
         Scanner in = new Scanner(System.in);
         taskList tasks = new taskList();
 
-        do {
+        while (true) {
+
             message = in.nextLine();
-            if (!message.equals("bye")) {
-                tasks.runTask(message);
+
+            if (message.equals("bye")) {
+                break;
             }
-        } while(!message.equals("bye"));
+            tasks.runTask(message);
+        }
 
         System.out.println("That concludes the briefing,good luck.");
     }

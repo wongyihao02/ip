@@ -1,9 +1,14 @@
+import java.util.Random;
+
 public class taskList {
 
     String[] listOfTasks;
     boolean[] isMarked;
     int numTasks;
-
+    static int emptyResponseCount = 0;
+    static int maxTolerance = 5;
+    static String[] emptyInputLines = new String[]{"no input detected",
+    "please enter a valid input", "Is this intentional?", "Invalid inputs are not appreciated"};
 
      public taskList() {    //creates a list that can store 100 tasks
         this.listOfTasks = new String[100];
@@ -39,7 +44,21 @@ public class taskList {
         isMarked[pos - 1] = false;
     }
 
+    void emptyInputResponse() {
+         if (emptyResponseCount > maxTolerance) {
+             System.out.println("hmmm");
+         } else {
+             System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
+             emptyResponseCount++;
+         }
+    }
+
     public void runTask(String task) {
+
+         if (task.isBlank()) {
+             emptyInputResponse();
+             return;
+         }
 
         String[] words = task.split(" ");
 
