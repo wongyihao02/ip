@@ -1,76 +1,156 @@
+
 import java.util.Random;
 
 public class taskList {
 
-    String[] listOfTasks;
-    boolean[] isMarked;
+    task[] listOfTasks;
+    //boolean[] isMarked;
     int numTasks;
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
     static String[] emptyInputLines = new String[]{"no input detected",
-    "please enter a valid input", "Is this intentional?", "Invalid inputs are not appreciated"};
+            "please enter a valid input", "Is this intentional?", "Invalid inputs are not appreciated"};
 
-     public taskList() {    //creates a list that can store 100 tasks
-        this.listOfTasks = new String[100];
-        this.isMarked = new boolean[100];
+    public taskList() {    //creates a list that can store 100 tasks
+        this.listOfTasks = new task[100];
+        //this.isMarked = new boolean[100];
         this.numTasks = 0;
     }
 
-    void addTask(String task) {
-        this.listOfTasks[numTasks] = task;
+    void addTask(String task, validTasks theTask) {
+
+        String[] words = task.split(" ");
+
+        switch (theTask) {
+            case validTasks.TODO:
+                String taskInput = "";
+                for (int i = 2; i < words.length; i++) {
+                    taskInput += words[i] + " ";
+                }
+                listOfTasks[numTasks] = new ToDos(taskInput.trim());
+
+                break;
+            case validTasks.DEADLINE:
+                boolean p = true;
+                String taskName = "";
+                String byWhen = "";
+
+                for (int i = 1; i < words.length; i++) {
+                    if (words[i].equals("/by")) {
+                        p = false;
+                        continue;
+                    }
+
+                    if (p) {
+                        taskName += words[i] + " ";
+                    } else {
+                        byWhen +=words[i] + " ";
+                    }
+                }
+
+
+                listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
+                break;
+            case validTasks.EVENT:
+                int k = 1;
+                String taskName1 = "";
+                String fromWhen = "";
+                String toWhen = "";
+
+                for (int i = 1; i < words.length; i++) {
+                    if (words[i].equals("/from")) {
+                        k += 1;
+                        continue;
+                    } else if(words[i].equals("/to")) {
+                        k += 1;
+                        continue;
+                    }
+
+                    if (k == 1) {
+                        taskName1 += words[i] + " ";
+                    } else if (k == 2) {
+                        fromWhen += words[i] + " ";
+                    } else {
+                        toWhen += words[i] + " ";
+                    }
+                }
+                listOfTasks[numTasks] = new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim());
+                break;
+            default:
+                return;
+        }
         System.out.println("added: " + task);
         numTasks++;
     }
 
     void list() {
         System.out.println("Complete list of tasks:");
-        String temp;
 
-        for(int i = 0; i < numTasks; i++) {
-            if (isMarked[i]) {
-                temp = ".[X] ";
-            } else {
-                temp = ".[ ] ";
-            }
-            System.out.println((i+1) + temp + listOfTasks[i]);
+        for (int i = 0; i < numTasks; i++) {
+
+            System.out.println((i + 1) + ". " + listOfTasks[i].toString());
         }
     }
 
     void mark(int pos) {
-        isMarked[pos - 1] = true;//have to consider bad input in future
+        this.listOfTasks[pos - 1].setMark(true);//have to consider bad input in future
     }
 
     void unmark(int pos) {
-        isMarked[pos - 1] = false;
+        this.listOfTasks[pos - 1].setMark(false);
     }
 
     void emptyInputResponse() {
-         if (emptyResponseCount > maxTolerance) {
-             System.out.println("hmmm");
-         } else {
-             System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
-             emptyResponseCount++;
-         }
+        if (emptyResponseCount > maxTolerance) {
+            System.out.println("hmmm");
+        } else {
+            System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
+            emptyResponseCount++;
+        }
     }
 
     public void runTask(String task) {
 
-         if (task.isBlank()) {
-             emptyInputResponse();
-             return;
-         }
+        if (task.isBlank()) {
+            emptyInputResponse();
+            return;
+        }
 
         String[] words = task.split(" ");
 
-        if (words[0].equals("mark")) {
-            mark(Integer.parseInt(words[1]));
-        } else if(words[0].equals("unmark")) {
-            unmark(Integer.parseInt(words[1]));
-        } else if(task.equals("list")) {
-            list();
-        } else {
-            addTask(task);
+        switch (words[0]) {
+            case "mark":
+                mark(Integer.parseInt(words[1]));
+                break;
+            case "unmark":
+                unmark(Integer.parseInt(words[1]));
+                break;
+            case "list":
+                list();
+                break;
+            case "todo":
+                addTask(task, validTasks.TODO);
+                break;
+            case "deadline":
+                addTask(task, validTasks.DEADLINE);
+                break;
+            case "event":
+                addTask(task, validTasks.EVENT);
+                break;
+            default:
+                System.out.println("unknown task: " + task);
         }
 
+//        if (words[0].equals("mark")) {
+//            mark(Integer.parseInt(words[1]));
+//        } else if(words[0].equals("unmark")) {
+//            unmark(Integer.parseInt(words[1]));
+//        } else if(task.equals("list")) {
+//            list();
+//        } else {
+//            addTask(task);
     }
+
 }
+
+
