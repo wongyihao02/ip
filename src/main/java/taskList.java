@@ -54,7 +54,6 @@ public class taskList {
                     }
                 }
 
-
                 listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
                 break;
             case validTasks.EVENT:
