@@ -54,6 +54,14 @@ public class taskList {
                     }
                 }
 
+<<<<<<< HEAD
+=======
+                if (taskName.equals("") || byWhen.equals("")) {
+                    System.out.println("incomplete command detected, please enter a complete command");
+                    break;
+                }
+
+>>>>>>> error_handling_test
                 listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
                 break;
             case validTasks.EVENT:
@@ -78,6 +86,11 @@ public class taskList {
                     } else {
                         toWhen += words[i] + " ";
                     }
+                }
+
+                if (taskName1.equals("") || fromWhen.equals("") || toWhen.equals("")) {
+                    System.out.println("incomplete command detected, please enter a complete command");
+                    break;
                 }
                 listOfTasks[numTasks] = new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim());
                 break;
