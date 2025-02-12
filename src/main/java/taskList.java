@@ -9,7 +9,8 @@ public class taskList {
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
     static String[] emptyInputLines = new String[]{"no input detected",
-            "please enter a valid input", "Is this intentional?", "Invalid inputs are not appreciated"};
+            "please enter a valid input", "Is this intentional?"
+            , "Invalid inputs are not appreciated"};
 
     public taskList() {    //creates a list that can store 100 tasks
         this.listOfTasks = new task[100];
@@ -21,10 +22,15 @@ public class taskList {
 
         String[] words = task.split(" ");
 
+        if (words.length == 1) {
+            System.out.println("Invalid Input detected, just entering " + words[0]
+                    + " alone is not allowed." + ".please enter a valid input");
+        }
+
         switch (theTask) {
             case validTasks.TODO:
                 String taskInput = "";
-                for (int i = 2; i < words.length; i++) {
+                for (int i = 1; i < words.length; i++) {
                     taskInput += words[i] + " ";
                 }
                 listOfTasks[numTasks] = new ToDos(taskInput.trim());
@@ -138,7 +144,7 @@ public class taskList {
                 addTask(task, validTasks.EVENT);
                 break;
             default:
-                System.out.println("unknown task: " + task);
+                System.out.println("unknown task detected: " + task);
         }
 
 //        if (words[0].equals("mark")) {
