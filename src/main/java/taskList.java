@@ -54,14 +54,13 @@ public class taskList {
                     }
                 }
 
-<<<<<<< HEAD
-=======
+
                 if (taskName.equals("") || byWhen.equals("")) {
                     System.out.println("incomplete command detected, please enter a complete command");
                     break;
                 }
 
->>>>>>> error_handling_test
+
                 listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
                 break;
             case validTasks.EVENT:
