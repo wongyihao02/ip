@@ -1,4 +1,6 @@
-public class Event extends task{
+package Allmind_tasks;
+
+public class Event extends task {
 
     private final String when;
     private final String toWhen;

@@ -1,3 +1,5 @@
+package Allmind_main;
+
 import java.util.Scanner;
 
 public class Allmind {
@@ -11,7 +13,7 @@ public class Allmind {
 
         System.out.println("Hello! I'm AllMind, the support system for all mercenaries");
 
-        System.out.println("What task would you like me to help you with today?");
+        System.out.println("What Allmind_tasks.task would you like me to help you with today?");
 
         System.out.println(" ");
 

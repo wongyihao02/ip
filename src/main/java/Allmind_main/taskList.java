@@ -1,3 +1,6 @@
+package Allmind_main;
+
+import Allmind_tasks.*;
 
 import java.util.Random;
 
@@ -54,14 +57,12 @@ public class taskList {
                     }
                 }
 
-<<<<<<< HEAD
-=======
+
                 if (taskName.equals("") || byWhen.equals("")) {
                     System.out.println("incomplete command detected, please enter a complete command");
                     break;
                 }
 
->>>>>>> error_handling_test
                 listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
                 break;
             case validTasks.EVENT:
@@ -156,17 +157,17 @@ public class taskList {
                 addTask(task, validTasks.EVENT);
                 break;
             default:
-                System.out.println("unknown task detected: " + task);
+                System.out.println("unknown Allmind_tasks.task detected: " + task);
         }
 
 //        if (words[0].equals("mark")) {
 //            mark(Integer.parseInt(words[1]));
 //        } else if(words[0].equals("unmark")) {
 //            unmark(Integer.parseInt(words[1]));
-//        } else if(task.equals("list")) {
+//        } else if(Allmind_tasks.task.equals("list")) {
 //            list();
 //        } else {
-//            addTask(task);
+//            addTask(Allmind_tasks.task);
     }
 
 }

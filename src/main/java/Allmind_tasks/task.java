@@ -1,3 +1,5 @@
+package Allmind_tasks;
+
 public class task {
 
     private final String name;

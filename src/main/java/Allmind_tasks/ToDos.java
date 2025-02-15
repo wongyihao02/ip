@@ -1,4 +1,6 @@
-public class ToDos extends task{
+package Allmind_tasks;
+
+public class ToDos extends task {
 
     public ToDos(String task) {
         super(task);
