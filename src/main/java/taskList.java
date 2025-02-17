@@ -1,9 +1,10 @@
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class taskList {
 
-    task[] listOfTasks;
+    ArrayList<task> listOfTasks;
     //boolean[] isMarked;
     int numTasks;
     static int emptyResponseCount = 0;
@@ -13,7 +14,7 @@ public class taskList {
             , "Invalid inputs are not appreciated"};
 
     public taskList() {    //creates a list that can store 100 tasks
-        this.listOfTasks = new task[100];
+        this.listOfTasks = new ArrayList<>();
         //this.isMarked = new boolean[100];
         this.numTasks = 0;
     }
@@ -33,7 +34,7 @@ public class taskList {
                 for (int i = 1; i < words.length; i++) {
                     taskInput += words[i] + " ";
                 }
-                listOfTasks[numTasks] = new ToDos(taskInput.trim());
+                this.listOfTasks.add(new ToDos(taskInput.trim()));
 
                 break;
             case validTasks.DEADLINE:
@@ -61,7 +62,7 @@ public class taskList {
                 }
 
 
-                listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
+                this.listOfTasks.add(new Deadline(taskName.trim(), byWhen.trim()));
                 break;
             case validTasks.EVENT:
                 int k = 1;
@@ -91,7 +92,7 @@ public class taskList {
                     System.out.println("incomplete command detected, please enter a complete command");
                     break;
                 }
-                listOfTasks[numTasks] = new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim());
+                this.listOfTasks.add(new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim()));
                 break;
             default:
                 return;
@@ -105,16 +106,16 @@ public class taskList {
 
         for (int i = 0; i < numTasks; i++) {
 
-            System.out.println((i + 1) + ". " + listOfTasks[i].toString());
+            System.out.println((i + 1) + ". " + this.listOfTasks.get(i).toString());
         }
     }
 
     void mark(int pos) {
-        this.listOfTasks[pos - 1].setMark(true);//have to consider bad input in future
+        this.listOfTasks.get(pos - 1).setMark(true);//have to consider bad input in future
     }
 
     void unmark(int pos) {
-        this.listOfTasks[pos - 1].setMark(false);
+        this.listOfTasks.get(pos - 1).setMark(false);
     }
 
     void emptyInputResponse() {
