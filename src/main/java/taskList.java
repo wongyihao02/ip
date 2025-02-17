@@ -5,8 +5,6 @@ import java.util.Random;
 public class taskList {
 
     ArrayList<task> listOfTasks;
-    //boolean[] isMarked;
-    int numTasks;
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
     static String[] emptyInputLines = new String[]{"no input detected",
@@ -16,7 +14,6 @@ public class taskList {
     public taskList() {    //creates a list that can store 100 tasks
         this.listOfTasks = new ArrayList<>();
         //this.isMarked = new boolean[100];
-        this.numTasks = 0;
     }
 
     void addTask(String task, validTasks theTask) {
@@ -98,13 +95,13 @@ public class taskList {
                 return;
         }
         System.out.println("added: " + task);
-        numTasks++;
+
     }
 
     void list() {
         System.out.println("Complete list of tasks:");
 
-        for (int i = 0; i < numTasks; i++) {
+        for (int i = 0; i < this.listOfTasks.size(); i++) {
 
             System.out.println((i + 1) + ". " + this.listOfTasks.get(i).toString());
         }
@@ -125,6 +122,12 @@ public class taskList {
             System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
             emptyResponseCount++;
         }
+    }
+
+    void delete(int pos) {
+        System.out.println("Deleting task: " + this.listOfTasks.get(pos - 1).toString());
+        this.listOfTasks.remove(pos - 1);
+
     }
 
     public void runTask(String task) {
@@ -154,6 +157,9 @@ public class taskList {
                 break;
             case "event":
                 addTask(task, validTasks.EVENT);
+                break;
+            case "delete":
+                delete(Integer.parseInt(words[1]));
                 break;
             default:
                 System.out.println("unknown task detected: " + task);
