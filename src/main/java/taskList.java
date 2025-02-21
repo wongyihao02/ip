@@ -1,11 +1,10 @@
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class taskList {
 
-    task[] listOfTasks;
-    //boolean[] isMarked;
-    int numTasks;
+    ArrayList<task> listOfTasks;
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
     static String[] emptyInputLines = new String[]{"no input detected",
@@ -13,9 +12,8 @@ public class taskList {
             , "Invalid inputs are not appreciated"};
 
     public taskList() {    //creates a list that can store 100 tasks
-        this.listOfTasks = new task[100];
+        this.listOfTasks = new ArrayList<>();
         //this.isMarked = new boolean[100];
-        this.numTasks = 0;
     }
 
     void addTask(String task, validTasks theTask) {
@@ -33,7 +31,7 @@ public class taskList {
                 for (int i = 1; i < words.length; i++) {
                     taskInput += words[i] + " ";
                 }
-                listOfTasks[numTasks] = new ToDos(taskInput.trim());
+                this.listOfTasks.add(new ToDos(taskInput.trim()));
 
                 break;
             case validTasks.DEADLINE:
@@ -61,7 +59,7 @@ public class taskList {
                 }
 
 
-                listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
+                this.listOfTasks.add(new Deadline(taskName.trim(), byWhen.trim()));
                 break;
             case validTasks.EVENT:
                 int k = 1;
@@ -91,30 +89,30 @@ public class taskList {
                     System.out.println("incomplete command detected, please enter a complete command");
                     break;
                 }
-                listOfTasks[numTasks] = new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim());
+                this.listOfTasks.add(new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim()));
                 break;
             default:
                 return;
         }
         System.out.println("added: " + task);
-        numTasks++;
+
     }
 
     void list() {
         System.out.println("Complete list of tasks:");
 
-        for (int i = 0; i < numTasks; i++) {
+        for (int i = 0; i < this.listOfTasks.size(); i++) {
 
-            System.out.println((i + 1) + ". " + listOfTasks[i].toString());
+            System.out.println((i + 1) + ". " + this.listOfTasks.get(i).toString());
         }
     }
 
     void mark(int pos) {
-        this.listOfTasks[pos - 1].setMark(true);//have to consider bad input in future
+        this.listOfTasks.get(pos - 1).setMark(true);//have to consider bad input in future
     }
 
     void unmark(int pos) {
-        this.listOfTasks[pos - 1].setMark(false);
+        this.listOfTasks.get(pos - 1).setMark(false);
     }
 
     void emptyInputResponse() {
@@ -124,6 +122,12 @@ public class taskList {
             System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
             emptyResponseCount++;
         }
+    }
+
+    void delete(int pos) {
+        System.out.println("Deleting task: " + this.listOfTasks.get(pos - 1).toString());
+        this.listOfTasks.remove(pos - 1);
+
     }
 
     public void runTask(String task) {
@@ -153,6 +157,9 @@ public class taskList {
                 break;
             case "event":
                 addTask(task, validTasks.EVENT);
+                break;
+            case "delete":
+                delete(Integer.parseInt(words[1]));
                 break;
             default:
                 System.out.println("unknown task detected: " + task);
