@@ -1,11 +1,16 @@
 
+import java.io.*;
+import java.nio.file.Path;
 import java.util.Random;
+import java.util.Scanner;
+
 
 public class taskList {
 
     task[] listOfTasks;
     //boolean[] isMarked;
     int numTasks;
+    static String filePath = "data/savedTaskList.txt";
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
     static String[] emptyInputLines = new String[]{"no input detected",
@@ -16,88 +21,155 @@ public class taskList {
         this.listOfTasks = new task[100];
         //this.isMarked = new boolean[100];
         this.numTasks = 0;
+        if (!new File(filePath).exists()) {
+            File dir = new File("data");
+            dir.mkdir();
+            File a = new File(filePath);
+            try {
+                a.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            getFromList();
+        }
     }
 
-    void addTask(String task, validTasks theTask) {
+    void getFromList() {
+        try {
+            Scanner scanner = new Scanner(new File(filePath));
+            scanner.useDelimiter(System.lineSeparator());
+            String line;
+            String[] input;
 
-        String[] words = task.split(" ");
 
-        if (words.length == 1) {
-            System.out.println("Invalid Input detected, just entering " + words[0]
-                    + " alone is not allowed." + ".please enter a valid input");
+            while (scanner.hasNext()) {
+
+                line = scanner.next();
+                input = line.split(" ");
+
+                if (input[0].equals("yes")) {
+                    switch (input[1]) {
+                        case "todo":
+                            addTask(line.replaceFirst("yes ", ""), validTasks.TODO, true, true);
+                            break;
+                        case "deadline":
+                            addTask(line.replaceFirst("yes ", ""), validTasks.DEADLINE, true, true);
+                            break;
+                        case "event":
+                            addTask(line.replaceFirst("yes ", ""), validTasks.EVENT, true, true);
+                            break;
+
+                    }
+
+                } else {
+                    switch (input[1]) {
+                        case "todo":
+                            addTask(line.replaceFirst("yes ", ""), validTasks.TODO, false, true);
+                            break;
+                        case "deadline":
+                            addTask(line.replaceFirst("yes ", ""), validTasks.DEADLINE, false, true);
+                            break;
+                        case "event":
+                            addTask(line.replaceFirst("yes ", ""), validTasks.EVENT, false, true);
+                            break;
+
+                    }
+                }
+
+
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
         }
+    }
 
-        switch (theTask) {
-            case validTasks.TODO:
-                String taskInput = "";
-                for (int i = 1; i < words.length; i++) {
-                    taskInput += words[i] + " ";
-                }
-                listOfTasks[numTasks] = new ToDos(taskInput.trim());
+    void addTask(String task, validTasks theTask, boolean mark, boolean inListAlr){
 
-                break;
-            case validTasks.DEADLINE:
-                boolean p = true;
-                String taskName = "";
-                String byWhen = "";
+            String[] words = task.split(" ");
 
-                for (int i = 1; i < words.length; i++) {
-                    if (words[i].equals("/by")) {
-                        p = false;
-                        continue;
+            if (words.length == 1) {
+                System.out.println("Invalid Input detected, just entering " + words[0]
+                        + " alone is not allowed." + ".please enter a valid input");
+
+            }
+
+            switch (theTask) {
+                case validTasks.TODO:
+                    String taskInput = "";
+                    for (int i = 1; i < words.length; i++) {
+                        taskInput += words[i] + " ";
                     }
+                    listOfTasks[numTasks] = new ToDos(taskInput.trim(), mark);
 
-                    if (p) {
-                        taskName += words[i] + " ";
-                    } else {
-                        byWhen +=words[i] + " ";
-                    }
-                }
-
-
-                if (taskName.equals("") || byWhen.equals("")) {
-                    System.out.println("incomplete command detected, please enter a complete command");
                     break;
-                }
+                case validTasks.DEADLINE:
+                    boolean p = true;
+                    String taskName = "";
+                    String byWhen = "";
 
+                    for (int i = 1; i < words.length; i++) {
+                        if (words[i].equals("/by")) {
+                            p = false;
+                            continue;
+                        }
 
-                listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim());
-                break;
-            case validTasks.EVENT:
-                int k = 1;
-                String taskName1 = "";
-                String fromWhen = "";
-                String toWhen = "";
-
-                for (int i = 1; i < words.length; i++) {
-                    if (words[i].equals("/from")) {
-                        k += 1;
-                        continue;
-                    } else if(words[i].equals("/to")) {
-                        k += 1;
-                        continue;
+                        if (p) {
+                            taskName += words[i] + " ";
+                        } else {
+                            byWhen += words[i] + " ";
+                        }
                     }
 
-                    if (k == 1) {
-                        taskName1 += words[i] + " ";
-                    } else if (k == 2) {
-                        fromWhen += words[i] + " ";
-                    } else {
-                        toWhen += words[i] + " ";
-                    }
-                }
 
-                if (taskName1.equals("") || fromWhen.equals("") || toWhen.equals("")) {
-                    System.out.println("incomplete command detected, please enter a complete command");
+                    if (taskName.equals("") || byWhen.equals("")) {
+                        System.out.println("incomplete command detected, please enter a complete command");
+                        break;
+                    }
+
+
+                    listOfTasks[numTasks] = new Deadline(taskName.trim(), byWhen.trim(), mark);
                     break;
-                }
-                listOfTasks[numTasks] = new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim());
-                break;
-            default:
-                return;
-        }
-        System.out.println("added: " + task);
-        numTasks++;
+                case validTasks.EVENT:
+                    int k = 1;
+                    String taskName1 = "";
+                    String fromWhen = "";
+                    String toWhen = "";
+
+                    for (int i = 1; i < words.length; i++) {
+                        if (words[i].equals("/from")) {
+                            k += 1;
+                            continue;
+                        } else if (words[i].equals("/to")) {
+                            k += 1;
+                            continue;
+                        }
+
+                        if (k == 1) {
+                            taskName1 += words[i] + " ";
+                        } else if (k == 2) {
+                            fromWhen += words[i] + " ";
+                        } else {
+                            toWhen += words[i] + " ";
+                        }
+                    }
+
+                    if (taskName1.equals("") || fromWhen.equals("") || toWhen.equals("")) {
+                        System.out.println("incomplete command detected, please enter a complete command");
+                        break;
+                    }
+                    listOfTasks[numTasks] = new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim(), mark);
+                    break;
+                default:
+                    return;
+            }
+            if (!inListAlr) {
+                saveTask(task);
+            }
+
+            System.out.println("added: " + task);
+            numTasks++;
+
     }
 
     void list() {
@@ -111,10 +183,12 @@ public class taskList {
 
     void mark(int pos) {
         this.listOfTasks[pos - 1].setMark(true);//have to consider bad input in future
+        updateSavedTaskList(pos, true);
     }
 
     void unmark(int pos) {
         this.listOfTasks[pos - 1].setMark(false);
+        updateSavedTaskList(pos, false);
     }
 
     void emptyInputResponse() {
@@ -124,6 +198,56 @@ public class taskList {
             System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
             emptyResponseCount++;
         }
+    }
+
+    public void saveTask(String task) {
+
+        try {
+            FileWriter fw = new FileWriter(filePath, true);
+            fw.write("no " + task + System.lineSeparator());
+            fw.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + " detected");
+        }
+    }
+
+    public void updateSavedTaskList(int pos, boolean mark) {
+        try {
+            File a = new File(filePath);
+            Scanner look = new Scanner(a);
+            look.useDelimiter(System.lineSeparator());
+            String final_out = "";
+            String looked = "";
+            String intermediate;
+
+            for (int i = 0; i < numTasks; i++) {
+
+                if (look.hasNext()) {
+                    looked = look.next();
+                }
+
+                if (i + 1 == pos) {
+                    if (mark) {
+                        final_out += looked.replaceFirst("no ", "yes ") + System.lineSeparator();
+                    } else {
+                        final_out += looked.replaceFirst("yes ", "no ") + System.lineSeparator();
+                    }
+                } else {
+
+                    final_out += looked + System.lineSeparator();
+                }
+
+            }
+
+            FileWriter hsy = new FileWriter(filePath);
+            hsy.write(final_out);
+            hsy.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage() + " detected");
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + " detected");
+        }
+
     }
 
     public void runTask(String task) {
@@ -146,13 +270,13 @@ public class taskList {
                 list();
                 break;
             case "todo":
-                addTask(task, validTasks.TODO);
+                addTask(task, validTasks.TODO, false, false);
                 break;
             case "deadline":
-                addTask(task, validTasks.DEADLINE);
+                addTask(task, validTasks.DEADLINE, false, false);
                 break;
             case "event":
-                addTask(task, validTasks.EVENT);
+                addTask(task, validTasks.EVENT, false, false);
                 break;
             default:
                 System.out.println("unknown task detected: " + task);

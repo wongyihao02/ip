@@ -8,6 +8,11 @@ public class task {
         this.mark = false;
     }
 
+    public task(String name, boolean mark) {
+        this.name = name;
+        this.mark = mark;
+    }
+
     public boolean getMark() {
         return this.mark;
     }
