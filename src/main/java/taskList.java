@@ -212,6 +212,7 @@ public class taskList {
     void delete(int pos) {
         System.out.println("Deleting task: " + this.listOfTasks.get(pos - 1).toString());
         this.listOfTasks.remove(pos - 1);
+        removeTaskFromSavedList(pos);
     }
 
     public void saveTask(String task) {
@@ -262,6 +263,35 @@ public class taskList {
             System.out.println(e.getMessage() + " detected");
         }
 
+    }
+
+    public void removeTaskFromSavedList(int pos) {
+        try {
+            File a = new File(filePath);
+            Scanner look = new Scanner(a);
+            look.useDelimiter(System.lineSeparator());
+            String final_out = "";
+            String looked = "";
+
+
+            for (int i = 0; i < listOfTasks.size(); i++) {
+                if (look.hasNext()) {
+                    looked = look.next();
+                }
+                if (i + 1 != pos) {
+                    final_out += looked + System.lineSeparator();
+                }
+
+                }
+
+            FileWriter hsy = new FileWriter(filePath);
+            hsy.write(final_out);
+            hsy.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage() + " detected");
+        } catch (IOException e) {
+            System.out.println(e.getMessage() + " detected");
+        }
     }
 
     public void runTask(String task) {
