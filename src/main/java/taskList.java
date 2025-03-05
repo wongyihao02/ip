@@ -294,6 +294,14 @@ public class taskList {
         }
     }
 
+    /**
+     * Takes in a String that represents a command and carries out the command if it is a valid function of the class taskList.
+     * <p>
+     *     This is a new paragraph.
+     * </p>
+     * @param task A String that possibly represents a command,is a user input.
+     * @return nothing.
+     */
     public void runTask(String task) {
 
         if (task.isBlank()) {
