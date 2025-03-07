@@ -294,6 +294,17 @@ public class taskList {
         }
     }
 
+    public void find (String task) {
+        int i = 1;
+
+        for (int j = 0; j < listOfTasks.size(); j++) {
+            if (listOfTasks.get(j).toString().contains(task)) {
+                System.out.println(i + ". " + listOfTasks.get(j).toString());
+                i++;
+            }
+        }
+    }
+
     public void runTask(String task) {
 
         if (task.isBlank()) {
@@ -325,6 +336,8 @@ public class taskList {
             case "delete":
                 delete(Integer.parseInt(words[1]));
                 break;
+            case "find":
+                find(task.replaceFirst("find", " ").trim());
             default:
                 System.out.println("unknown task detected: " + task);
         }
