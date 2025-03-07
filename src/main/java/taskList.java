@@ -12,7 +12,7 @@ public class taskList {
 
     ArrayList<task> listOfTasks;
     //boolean[] isMarked;
-    static String filePath = "data/savedTaskList.txt";
+    String filePath;
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
     static String[] emptyInputLines = new String[]{"no input detected",
@@ -25,8 +25,9 @@ public class taskList {
      * if it does not,a new file is created.
      *
      */
-    public taskList() {
+    public taskList(String filePath) {
         this.listOfTasks = new ArrayList<>();
+        this.filePath = filePath;
         //this.isMarked = new boolean[100];
 
         if (!new File(filePath).exists()) {
@@ -366,6 +367,7 @@ public class taskList {
                 break;
             case "find":
                 find(task.replaceFirst("find", " ").trim());
+                break;
             default:
                 System.out.println("unknown task detected: " + task);
         }
