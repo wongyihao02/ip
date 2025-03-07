@@ -1,7 +1,12 @@
+import java.time.format.DateTimeFormatter;
+
+
 public class task {
 
     private final String name;
     private boolean mark;
+    static protected final DateTimeFormatter inFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy kkmm");
+    static protected final DateTimeFormatter outFormatter = DateTimeFormatter.ofPattern("MMM d yyyy h:mm B");
 
     /**
      * instatiates a task object with the name and mark set to false
