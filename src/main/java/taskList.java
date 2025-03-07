@@ -19,7 +19,13 @@ public class taskList {
             "please enter a valid input", "Is this intentional?"
             , "Invalid inputs are not appreciated"};
 
-    public taskList() {    //creates a list that can store 100 tasks
+
+    /**
+     * creates a new taskList object and loads the tasks from a text file if it exists and has tasks.
+     * if it does not,a new file is created.
+     *
+     */
+    public taskList() {
         this.listOfTasks = new ArrayList<>();
         //this.isMarked = new boolean[100];
 
@@ -215,6 +221,10 @@ public class taskList {
         removeTaskFromSavedList(pos);
     }
 
+    /**
+     * takes in the Task and adds it to the textfile that stores the taskList
+     * @param task String of the task to be saved
+     */
     public void saveTask(String task) {
 
         try {
@@ -226,6 +236,11 @@ public class taskList {
         }
     }
 
+    /**
+     * This updates the mark status of a task in the taskList.
+     * @param pos the position of the task to be updated
+     * @param mark the markstatus to be changed to
+     */
     public void updateSavedTaskList(int pos, boolean mark) {
         try {
             File a = new File(filePath);
@@ -265,6 +280,10 @@ public class taskList {
 
     }
 
+    /**
+     * removes the task from the saved task text file
+     * @param pos the line in which the task to be deleted is im
+     */
     public void removeTaskFromSavedList(int pos) {
         try {
             File a = new File(filePath);
@@ -293,7 +312,7 @@ public class taskList {
             System.out.println(e.getMessage() + " detected");
         }
     }
-
+    
     public void find (String task) {
         int i = 1;
 
@@ -305,6 +324,15 @@ public class taskList {
         }
     }
 
+
+    /**
+     * Takes in a String that represents a command and carries out the command if it is a valid function of the class taskList.
+     * <p>
+     *     This is a new paragraph.
+     * </p>
+     * @param task A String that possibly represents a command,is a user input.
+     * @return nothing.
+     */
     public void runTask(String task) {
 
         if (task.isBlank()) {
