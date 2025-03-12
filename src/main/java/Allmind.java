@@ -4,12 +4,12 @@ public class Allmind {
 
     private Ui ui;
     private Storage fileStorage;
-    private taskList taskList;
+    private TaskList taskList;
 
     public Allmind(String filePath) {
         ui = new Ui();
         fileStorage = new Storage(filePath);
-        taskList = new taskList(filePath);
+        taskList = new TaskList(filePath);
 
     }
 
@@ -26,14 +26,6 @@ public class Allmind {
     }
 
     public static void main(String[] args) {
-       /* String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);*/
-
-
 
         //echo part
 //        String message;

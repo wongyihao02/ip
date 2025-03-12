@@ -1,21 +1,23 @@
 
-
-import java.util.ArrayList;
 import java.io.*;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * It holds a list of tasks.Tasks can be added,removed and set as marked.
+ * Can be searched for all tasks with the corresponding words.
+ */
+public class TaskList {
 
-public class taskList {
 
+    private ArrayList<Task> listOfTasks;
+    private String filePath;
 
-    ArrayList<task> listOfTasks;
-    //boolean[] isMarked;
-    String filePath;
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
-    static String[] emptyInputLines = new String[]{"no input detected",
+    static final String[] emptyInputLines = new String[]{"no input detected",
             "please enter a valid input", "Is this intentional?"
             , "Invalid inputs are not appreciated"};
 
@@ -25,7 +27,7 @@ public class taskList {
      * if it does not,a new file is created.
      *
      */
-    public taskList(String filePath) {
+    public TaskList(String filePath) {
         this.listOfTasks = new ArrayList<>();
         this.filePath = filePath;
         //this.isMarked = new boolean[100];
@@ -49,50 +51,51 @@ public class taskList {
             Scanner scanner = new Scanner(new File(filePath));
             scanner.useDelimiter(System.lineSeparator());
             String line;
-            String[] input;
+            //String[] input;
 
 
             while (scanner.hasNext()) {
-
                 line = scanner.next();
-                input = line.split(" ");
-
-                if (input[0].equals("yes")) {
-                    switch (input[1]) {
-                        case "todo":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.TODO, true, true);
-                            break;
-                        case "deadline":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.DEADLINE, true, true);
-                            break;
-                        case "event":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.EVENT, true, true);
-                            break;
-
-                    }
-
-                } else {
-                    switch (input[1]) {
-                        case "todo":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.TODO, false, true);
-                            break;
-                        case "deadline":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.DEADLINE, false, true);
-                            break;
-                        case "event":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.EVENT, false, true);
-                            break;
-
-                    }
-                }
-
-
+                addFromList(line);
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         }
     }
+    void addFromList(String line) {
+        String[] input = line.split(" ");
+        String line2 = String.join(" ", Arrays.copyOfRange(input, 1, input.length));
 
+        if (input[0].equals("yes")) {
+
+            switch (input[1]) {
+                case "todo":
+                    addTask(line, validTasks.TODO, true, true);
+                    break;
+                case "deadline":
+                    addTask(line, validTasks.DEADLINE, true, true);
+                    break;
+                case "event":
+                    addTask(line, validTasks.EVENT, true, true);
+                    break;
+
+            }
+
+        } else {
+            switch (input[1]) {
+                case "todo":
+                    addTask(line, validTasks.TODO, false, true);
+                    break;
+                case "deadline":
+                    addTask(line, validTasks.DEADLINE, false, true);
+                    break;
+                case "event":
+                    addTask(line, validTasks.EVENT, false, true);
+                    break;
+
+            }
+        }
+    }
 
 //        switch (theTask) {
 //            case validTasks.TODO:
@@ -182,7 +185,7 @@ public class taskList {
             saveTask(task);
         }
 
-        System.out.println("added: " + task);
+        System.out.println("added: " + listOfTasks.getLast().toString());
 
     }
 
@@ -372,14 +375,7 @@ public class taskList {
                 System.out.println("unknown task detected: " + task);
         }
 
-//        if (words[0].equals("mark")) {
-//            mark(Integer.parseInt(words[1]));
-//        } else if(words[0].equals("unmark")) {
-//            unmark(Integer.parseInt(words[1]));
-//        } else if(task.equals("list")) {
-//            list();
-//        } else {
-//            addTask(task);
+//
     }
 
 }

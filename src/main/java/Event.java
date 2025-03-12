@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 
-public class Event extends task{
+public class Event extends Task{
 
     private final LocalDateTime when;
     private final LocalDateTime toWhen;

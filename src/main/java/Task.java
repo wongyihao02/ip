@@ -1,7 +1,7 @@
 import java.time.format.DateTimeFormatter;
 
 
-public class task {
+public class Task {
 
     private final String name;
     private boolean mark;
@@ -13,7 +13,7 @@ public class task {
      *
      * @param name the name of the task
      */
-    public task(String name) {
+    public Task(String name) {
         this.name = name;
         this.mark = false;
     }
@@ -23,7 +23,7 @@ public class task {
      * @param name the name of the task
      * @param mark the mark status that this task is set to
      */
-    public task(String name, boolean mark) {
+    public Task(String name, boolean mark) {
         this.name = name;
         this.mark = mark;
     }
