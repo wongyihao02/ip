@@ -1,26 +1,35 @@
 
-
-import java.util.ArrayList;
 import java.io.*;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * It holds a list of tasks.Tasks can be added,removed and set as marked.
+ * Can be searched for all tasks with the corresponding words.
+ */
+public class TaskList {
 
-public class taskList {
 
+    private ArrayList<Task> listOfTasks;
+    private String filePath;
 
-    ArrayList<task> listOfTasks;
-    //boolean[] isMarked;
-    static String filePath = "data/savedTaskList.txt";
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
-    static String[] emptyInputLines = new String[]{"no input detected",
+    static final String[] emptyInputLines = new String[]{"no input detected",
             "please enter a valid input", "Is this intentional?"
             , "Invalid inputs are not appreciated"};
 
-    public taskList() {    //creates a list that can store 100 tasks
+
+    /**
+     * creates a new taskList object and loads the tasks from a text file if it exists and has tasks.
+     * if it does not,a new file is created.
+     *
+     */
+    public TaskList(String filePath) {
         this.listOfTasks = new ArrayList<>();
+        this.filePath = filePath;
         //this.isMarked = new boolean[100];
 
         if (!new File(filePath).exists()) {
@@ -42,50 +51,51 @@ public class taskList {
             Scanner scanner = new Scanner(new File(filePath));
             scanner.useDelimiter(System.lineSeparator());
             String line;
-            String[] input;
+            //String[] input;
 
 
             while (scanner.hasNext()) {
-
                 line = scanner.next();
-                input = line.split(" ");
-
-                if (input[0].equals("yes")) {
-                    switch (input[1]) {
-                        case "todo":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.TODO, true, true);
-                            break;
-                        case "deadline":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.DEADLINE, true, true);
-                            break;
-                        case "event":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.EVENT, true, true);
-                            break;
-
-                    }
-
-                } else {
-                    switch (input[1]) {
-                        case "todo":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.TODO, false, true);
-                            break;
-                        case "deadline":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.DEADLINE, false, true);
-                            break;
-                        case "event":
-                            addTask(line.replaceFirst("yes ", ""), validTasks.EVENT, false, true);
-                            break;
-
-                    }
-                }
-
-
+                addFromList(line);
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         }
     }
+    void addFromList(String line) {
+        String[] input = line.split(" ");
+        String line2 = String.join(" ", Arrays.copyOfRange(input, 1, input.length));
 
+        if (input[0].equals("yes")) {
+
+            switch (input[1]) {
+                case "todo":
+                    addTask(line, validTasks.TODO, true, true);
+                    break;
+                case "deadline":
+                    addTask(line, validTasks.DEADLINE, true, true);
+                    break;
+                case "event":
+                    addTask(line, validTasks.EVENT, true, true);
+                    break;
+
+            }
+
+        } else {
+            switch (input[1]) {
+                case "todo":
+                    addTask(line, validTasks.TODO, false, true);
+                    break;
+                case "deadline":
+                    addTask(line, validTasks.DEADLINE, false, true);
+                    break;
+                case "event":
+                    addTask(line, validTasks.EVENT, false, true);
+                    break;
+
+            }
+        }
+    }
 
 //        switch (theTask) {
 //            case validTasks.TODO:
@@ -175,7 +185,7 @@ public class taskList {
             saveTask(task);
         }
 
-        System.out.println("added: " + task);
+        System.out.println("added: " + listOfTasks.getLast().toString());
 
     }
 
@@ -215,6 +225,10 @@ public class taskList {
         removeTaskFromSavedList(pos);
     }
 
+    /**
+     * takes in the Task and adds it to the textfile that stores the taskList
+     * @param task String of the task to be saved
+     */
     public void saveTask(String task) {
 
         try {
@@ -226,6 +240,11 @@ public class taskList {
         }
     }
 
+    /**
+     * This updates the mark status of a task in the taskList.
+     * @param pos the position of the task to be updated
+     * @param mark the markstatus to be changed to
+     */
     public void updateSavedTaskList(int pos, boolean mark) {
         try {
             File a = new File(filePath);
@@ -265,6 +284,10 @@ public class taskList {
 
     }
 
+    /**
+     * removes the task from the saved task text file
+     * @param pos the line in which the task to be deleted is im
+     */
     public void removeTaskFromSavedList(int pos) {
         try {
             File a = new File(filePath);
@@ -293,7 +316,27 @@ public class taskList {
             System.out.println(e.getMessage() + " detected");
         }
     }
+    
+    public void find (String task) {
+        int i = 1;
 
+        for (int j = 0; j < listOfTasks.size(); j++) {
+            if (listOfTasks.get(j).toString().contains(task)) {
+                System.out.println(i + ". " + listOfTasks.get(j).toString());
+                i++;
+            }
+        }
+    }
+
+
+    /**
+     * Takes in a String that represents a command and carries out the command if it is a valid function of the class taskList.
+     * <p>
+     *     This is a new paragraph.
+     * </p>
+     * @param task A String that possibly represents a command,is a user input.
+     * @return nothing.
+     */
     public void runTask(String task) {
 
         if (task.isBlank()) {
@@ -325,18 +368,14 @@ public class taskList {
             case "delete":
                 delete(Integer.parseInt(words[1]));
                 break;
+            case "find":
+                find(task.replaceFirst("find", " ").trim());
+                break;
             default:
                 System.out.println("unknown task detected: " + task);
         }
 
-//        if (words[0].equals("mark")) {
-//            mark(Integer.parseInt(words[1]));
-//        } else if(words[0].equals("unmark")) {
-//            unmark(Integer.parseInt(words[1]));
-//        } else if(task.equals("list")) {
-//            list();
-//        } else {
-//            addTask(task);
+//
     }
 
 }
