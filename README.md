@@ -1,6 +1,6 @@
 # This is a chatbot known as Allmind
 
-##What is Allmind?
+## What is Allmind?
 
 Allmind is a simple chatbot that is here to help you keep track of tasks.
 
