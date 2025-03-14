@@ -26,24 +26,24 @@ This command will add the taskName as a new todo Task at the end of the current 
 This command will add the taskName as a new deadline task at the end of the current taskList./by needs to be placed after the name of the task to tell the code that what appears afterwards is a date and time for the deadline.
 The date and time has to be entered in the format of day/month/year and time in 24hr format.Importantly,the day and month have to be given in 2 digits.e.g. if the month is 3,it has to be entered as 03.
 
-## event <taskName> /from <dd/mm/yyyy> <hhmm> /to <dd/mm/yyyy> <hhmm>
+## event taskName /from <dd/mm/yyyy> hhmm /to <dd/mm/yyyy> hhmm
 
 This command will add the taskName as a new event task at the end of the current tasklist./from and /to have to be added to tell the code that what comes after will be date and time.The format the date and time has to be entered in is
 like for deadline.
 
-## mark <num of task>
+## mark num of task
 
 This command will set the mark status of the task at the position of the number given to marked.
 
-## unmark <num of task>
+## unmark num of task
 
 This command will set the mark status of the task at the position of the number give to uinmarked.
 
-## delete <num of task>
+## delete num of task
 
 This command will delete the task at the position of the number given.All other tasks behind will be shifted up to cover the gap.
 
-## find <text to find>
+## find text to find
 
 This comman will print out all the tasks that contain the text given in the order that they are present in the list.
 
