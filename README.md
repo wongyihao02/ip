@@ -17,7 +17,7 @@ or has its mark status changed,the task is added,removed or has its mark status 
 
 This command will print out all the tasks that are currently added to the task list already.
 
-## todo <taskName>
+## todo taskName
 
 This command will add the taskName as a new todo Task at the end of the current taskList.
 
