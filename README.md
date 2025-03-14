@@ -49,7 +49,7 @@ This comman will print out all the tasks that contain the text given in the orde
 
 
 
-
+# micellaneous notes and warnings
 **Take Note**  If a command is given that is not among those listed above,am error message will be given.
 Prerequisites: JDK 17, update Intellij to the most recent version.
 
