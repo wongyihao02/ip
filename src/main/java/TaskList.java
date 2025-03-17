@@ -1,9 +1,9 @@
 
-import java.io.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Scanner;
+
 
 /**
  * It holds a list of tasks.Tasks can be added,removed and set as marked.
@@ -13,7 +13,8 @@ public class TaskList {
 
 
     private ArrayList<Task> listOfTasks;
-    private String filePath;
+    private final Storage storage;
+    private final Ui ui;
 
     static int emptyResponseCount = 0;
     static int maxTolerance = 5;
@@ -27,40 +28,19 @@ public class TaskList {
      * if it does not,a new file is created.
      *
      */
-    public TaskList(String filePath) {
+    public TaskList(Storage storage) {
         this.listOfTasks = new ArrayList<>();
-        this.filePath = filePath;
-        //this.isMarked = new boolean[100];
-
-        if (!new File(filePath).exists()) {
-            File dir = new File("data");
-            dir.mkdir();
-            File a = new File(filePath);
-            try {
-                a.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            getFromList();
-        }
+        this.storage = storage;
+        this.ui = new Ui();
+        getFromList();
     }
 
     void getFromList() {
-        try {
-            Scanner scanner = new Scanner(new File(filePath));
-            scanner.useDelimiter(System.lineSeparator());
-            String line;
-            //String[] input;
+         ArrayList<String> list = storage.readFile();
 
-
-            while (scanner.hasNext()) {
-                line = scanner.next();
-                addFromList(line);
+            for (int i = 0; i < list.size(); i++) {
+                addFromList(list.get(i));
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        }
     }
     void addFromList(String line) {
         String[] input = line.split(" ");
@@ -70,13 +50,13 @@ public class TaskList {
 
             switch (input[1]) {
                 case "todo":
-                    addTask(line, validTasks.TODO, true, true);
+                    addTask(line2, validTasks.TODO, true, true);
                     break;
                 case "deadline":
-                    addTask(line, validTasks.DEADLINE, true, true);
+                    addTask(line2, validTasks.DEADLINE, true, true);
                     break;
                 case "event":
-                    addTask(line, validTasks.EVENT, true, true);
+                    addTask(line2, validTasks.EVENT, true, true);
                     break;
 
             }
@@ -84,33 +64,27 @@ public class TaskList {
         } else {
             switch (input[1]) {
                 case "todo":
-                    addTask(line, validTasks.TODO, false, true);
+                    addTask(line2, validTasks.TODO, false, true);
                     break;
                 case "deadline":
-                    addTask(line, validTasks.DEADLINE, false, true);
+                    addTask(line2, validTasks.DEADLINE, false, true);
                     break;
                 case "event":
-                    addTask(line, validTasks.EVENT, false, true);
+                    addTask(line2, validTasks.EVENT, false, true);
                     break;
 
             }
         }
     }
 
-//        switch (theTask) {
-//            case validTasks.TODO:
-//                String taskInput = "";
-//                for (int i = 1; i < words.length; i++) {
-//                    taskInput += words[i] + " ";
-//                }
-//                this.listOfTasks.add(new ToDos(taskInput.trim()));
+
 
     void addTask(String task, validTasks theTask, boolean mark, boolean inListAlr) {
 
         String[] words = task.split(" ");
 
         if (words.length == 1) {
-            System.out.println("Invalid Input detected, just entering " + words[0]
+            ui.printMessage("Invalid Input detected, just entering " + words[0]
                     + " alone is not allowed." + ".please enter a valid input");
 
         }
@@ -143,8 +117,8 @@ public class TaskList {
 
                 }
                 if (taskName.equals("") || byWhen.equals("")) {
-                    System.out.println("incomplete command detected, please enter a complete command");
-                    break;
+                    ui.printMessage("incomplete command detected, please enter a complete command");
+                    return;
                 }
 
 
@@ -174,6 +148,11 @@ public class TaskList {
                         toWhen += words[i] + " ";
                     }
                 }
+
+                if (taskName1.equals("") || fromWhen.equals("") || toWhen.equals("")) {
+                    ui.printMessage("incomplete command detected, please enter a complete command");
+                    return;
+                }
                 this.listOfTasks.add(new Event(taskName1.trim(), fromWhen.trim(), toWhen.trim(), mark));
                 break;
             default:
@@ -185,7 +164,7 @@ public class TaskList {
             saveTask(task);
         }
 
-        System.out.println("added: " + listOfTasks.getLast().toString());
+        ui.printMessage("added: " + listOfTasks.getLast().toString());
 
     }
 
@@ -194,35 +173,35 @@ public class TaskList {
 
         for (int i = 0; i < this.listOfTasks.size(); i++) {
 
-            System.out.println((i + 1) + ". " + this.listOfTasks.get(i).toString());
+            ui.printMessage((i + 1) + ". " + this.listOfTasks.get(i).toString());
         }
     }
 
     void mark(int pos) {
-        this.listOfTasks.get(pos - 1).setMark(true);//have to consider bad input in future
-        updateSavedTaskList(pos, true);
+        this.listOfTasks.get(pos - 1).setMark(true);
+        updateSavedTaskList(pos - 1, true);
     }
 
     void unmark(int pos) {
         this.listOfTasks.get(pos - 1).setMark(false);
-        updateSavedTaskList(pos, false);
+        updateSavedTaskList(pos - 1, false);
 
     }
 
     void emptyInputResponse() {
         if (emptyResponseCount > maxTolerance) {
-            System.out.println("hmmm");
+            ui.printMessage("hmmm");
         } else {
-            System.out.println(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
+            ui.printMessage(emptyInputLines[new Random().nextInt(emptyInputLines.length)]);
             emptyResponseCount++;
         }
     }
 
 
     void delete(int pos) {
-        System.out.println("Deleting task: " + this.listOfTasks.get(pos - 1).toString());
+        ui.printMessage("Deleting task: " + this.listOfTasks.get(pos - 1).toString());
         this.listOfTasks.remove(pos - 1);
-        removeTaskFromSavedList(pos);
+        removeTaskFromSavedList(pos - 1);
     }
 
     /**
@@ -230,14 +209,7 @@ public class TaskList {
      * @param task String of the task to be saved
      */
     public void saveTask(String task) {
-
-        try {
-            FileWriter fw = new FileWriter(filePath, true);
-            fw.write("no " + task + System.lineSeparator());
-            fw.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage() + " detected");
-        }
+        storage.writeAppendFile("no " + task);
     }
 
     /**
@@ -246,41 +218,16 @@ public class TaskList {
      * @param mark the markstatus to be changed to
      */
     public void updateSavedTaskList(int pos, boolean mark) {
-        try {
-            File a = new File(filePath);
-            Scanner look = new Scanner(a);
-            look.useDelimiter(System.lineSeparator());
-            String final_out = "";
-            String looked = "";
-            String intermediate;
+        ArrayList<String> list = storage.readFile();
+        String placeHolder = list.get(pos);
 
-            for (int i = 0; i < listOfTasks.size(); i++) {
-
-                if (look.hasNext()) {
-                    looked = look.next();
-                }
-
-                if (i + 1 == pos) {
-                    if (mark) {
-                        final_out += looked.replaceFirst("no ", "yes ") + System.lineSeparator();
-                    } else {
-                        final_out += looked.replaceFirst("yes ", "no ") + System.lineSeparator();
-                    }
-                } else {
-
-                    final_out += looked + System.lineSeparator();
-                }
-
-            }
-
-            FileWriter hsy = new FileWriter(filePath);
-            hsy.write(final_out);
-            hsy.close();
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage() + " detected");
-        } catch (IOException e) {
-            System.out.println(e.getMessage() + " detected");
+        if (mark) {
+            placeHolder = placeHolder.replaceFirst("no " , "yes ");
+        } else {
+            placeHolder = placeHolder.replaceFirst("yes " , "no ");
         }
+        list.set(pos, placeHolder);
+        storage.writeReplaceFile(String.join(System.lineSeparator(), list));
 
     }
 
@@ -289,32 +236,10 @@ public class TaskList {
      * @param pos the line in which the task to be deleted is im
      */
     public void removeTaskFromSavedList(int pos) {
-        try {
-            File a = new File(filePath);
-            Scanner look = new Scanner(a);
-            look.useDelimiter(System.lineSeparator());
-            String final_out = "";
-            String looked = "";
+        ArrayList<String> list = storage.readFile();
+        list.remove(pos);
+        storage.writeReplaceFile(String.join(System.lineSeparator(), list));
 
-
-            for (int i = 0; i < listOfTasks.size(); i++) {
-                if (look.hasNext()) {
-                    looked = look.next();
-                }
-                if (i + 1 != pos) {
-                    final_out += looked + System.lineSeparator();
-                }
-
-                }
-
-            FileWriter hsy = new FileWriter(filePath);
-            hsy.write(final_out);
-            hsy.close();
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage() + " detected");
-        } catch (IOException e) {
-            System.out.println(e.getMessage() + " detected");
-        }
     }
     
     public void find (String task) {
@@ -322,7 +247,7 @@ public class TaskList {
 
         for (int j = 0; j < listOfTasks.size(); j++) {
             if (listOfTasks.get(j).toString().contains(task)) {
-                System.out.println(i + ". " + listOfTasks.get(j).toString());
+                ui.printMessage(i + ". " + listOfTasks.get(j).toString());
                 i++;
             }
         }
@@ -372,10 +297,8 @@ public class TaskList {
                 find(task.replaceFirst("find", " ").trim());
                 break;
             default:
-                System.out.println("unknown task detected: " + task);
+                ui.printMessage("unknown task detected: " + task);
         }
-
-//
     }
 
 }
