@@ -21,7 +21,7 @@ This command will print out all the tasks that are currently added to the task l
 
 This command will add the taskName as a new todo Task at the end of the current taskList.
 
-## deadline taskName /by <dd/mm/yyyy> <hhmm>
+## deadline taskName /by <dd/mm/yyyy> hhmm
 
 This command will add the taskName as a new deadline task at the end of the current taskList./by needs to be placed after the name of the task to tell the code that what appears afterwards is a date and time for the deadline.
 The date and time has to be entered in the format of day/month/year and time in 24hr format.Importantly,the day and month have to be given in 2 digits.e.g. if the month is 3,it has to be entered as 03.
